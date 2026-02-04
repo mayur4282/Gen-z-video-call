@@ -13,7 +13,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { AuthContext } from '../contexts/AuthContext';
+import { Snackbar } from '@mui/material';
 
 
 
@@ -27,11 +28,41 @@ export default function Authentication() {
     const [password ,setPassword] = useState();
     const [ name, setName] = useState();
      const [ error, setError]  = useState();
-    const [ messages, setMessages]  = useState();
+    const [ message, setMessage]  = useState();
 
      const [formState, setFormState] = useState(0);
    
      const [open, setOpen] = useState(false);
+
+        const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+      let handleAuth = async () => {
+        try {
+            if (formState === 0) {
+
+                let result = await handleLogin(username, password)
+
+
+            }
+            if (formState === 1) {
+                let result = await handleRegister(name, username, password);
+                console.log(result);
+                setUsername("");
+                setMessage(result);
+                setOpen(true);
+                setError("")
+                setFormState(0)
+                setPassword("")
+            }
+        } catch (err) {
+
+            //  console.log(err);
+            
+            let message = (err.response.data.message);
+            setError(message);
+        }
+    }
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -80,6 +111,7 @@ export default function Authentication() {
                 id="fullname"
                 label="Fullname"
                 name="fullname"
+                value={name}
                 autoFocus
                 onChange={(e)=>
                   setName(e.target.value)}
@@ -92,6 +124,7 @@ export default function Authentication() {
                 id="username"
                 label="Username"
                 name="username"
+                value={username}
                 autoFocus
                  onChange={(e)=>
                   setUsername(e.target.value)}
@@ -102,28 +135,35 @@ export default function Authentication() {
                 fullWidth
                 name="password"
                 label="Password"
+                value={password}
                 type="password"
                 id="password"
                  onChange={(e)=>
                   setPassword(e.target.value)}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+                   <p style={{ color: "red" }}>{error}</p>
               <Button
                 type="button"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleAuth}
               >
-                Sign In
+                {formState == 0 ? "Login " : "Register"  } 
               </Button>
              
             </Box>
           </Box>
         </Grid>
       </Grid>
+
+       <Snackbar
+
+                open={open}
+                autoHideDuration={4000}
+                message={message}
+            />
+
     </ThemeProvider>
   );
 }
