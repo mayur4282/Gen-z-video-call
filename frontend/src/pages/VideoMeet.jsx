@@ -43,7 +43,7 @@ let localVideoRef = useRef();
 
       let [screen, setScreen] = useState();
 
-       let [showModal, setModal] = useState();
+       let [showModal, setModal] = useState(true);
 
     let [screenAvailable, setScreenAvailable] = useState();
 
@@ -236,10 +236,36 @@ let localVideoRef = useRef();
 
     }
 
-  //todo
-    let addMessage  = ()=> {
 
+        let handleEndCall = () => {
+        try {
+            let tracks = localVideoref.current.srcObject.getTracks()
+            tracks.forEach(track => track.stop())
+        } catch (e) { }
+        window.location.href = "/"
     }
+  
+     let openChat = () => {
+        setModal(true);
+        setNewMessages(0);
+    }
+    let closeChat = () => {
+        setModal(false);
+    }
+    let handleMessage = (e) => {
+        setMessage(e.target.value);
+    }
+
+  //todo
+    const addMessage = (data, sender, socketIdSender) => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: sender, data: data }
+        ]);
+        if (socketIdSender !== socketIdRef.current) {
+            setNewMessages((prevNewMessages) => prevNewMessages + 1);
+        }
+    };
 
      let connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false })
@@ -345,6 +371,14 @@ let localVideoRef = useRef();
         setAudio(audioAvailable);
          connectToSocketServer();
 
+    }
+    
+     let sendMessage = () => {
+        console.log(socketRef.current);
+        socketRef.current.emit('chat-message', message, username)
+        setMessage("");
+
+        // this.setState({ message: "", sender: username })
     }
 
    let connect = () => {
@@ -476,8 +510,8 @@ let localVideoRef = useRef();
                         <IconButton onClick={handleVideo} style={{ color: "white" }}>
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
-                        <IconButton  style={{ color: "red" }}>
-                            <CallEndIcon  />
+                        <IconButton onClick={handleEndCall}>
+                            <CallEndIcon  style={{ color: "red" }} />
                         </IconButton>
                         <IconButton onClick={handleAudio}  style={{ color: "white" }}>
                             {audio === true ? <MicIcon /> : <MicOffIcon />}
@@ -488,12 +522,13 @@ let localVideoRef = useRef();
                                 {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                             </IconButton> : <></>}
 
-                        <Badge badgeContent={newMessages} max={999} color='secondary'>
+                        <Badge badgeContent={newMessages} max={999} color='orange'>
                             <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
                                 <ChatIcon />                        </IconButton>
                         </Badge>
 
                     </div>
+                    
 
 
 

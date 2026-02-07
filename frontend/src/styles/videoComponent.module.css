@@ -14,14 +14,20 @@
 }
 
 .buttonContainers {
-    position: absolute;
-    width: 100vw;
+    position: fixed;
     bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgb(1, 4, 48);
     text-align: center;
+    padding: 10px;
+    z-index: 9999;
 }
 
+
 .buttonContainers svg {
-    font-size: 3rem;
+    color: white;
+    font-size: 32px;
 }
 
 .conferenceView { 
@@ -40,7 +46,8 @@
 }
 
 .chatRoom {
-    position: absolute;
+    position: fixed;
+     bottom: 70px;   
     height: 90vh;
     right: 0;
     background: white;
