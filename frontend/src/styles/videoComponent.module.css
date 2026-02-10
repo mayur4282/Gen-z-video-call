@@ -19,7 +19,7 @@
     left: 0;
     width: 100%;
     background: rgb(1, 4, 48);
-    text-align: center;
+    text-align: center; 
     padding: 10px;
     z-index: 9999;
 }

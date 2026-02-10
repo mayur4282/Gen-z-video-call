@@ -1,9 +1,11 @@
 import React from 'react'
 import "../App.css"
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 
 
 export default function LandingPage() {
+    const router = useNavigate();
+
   return (
     <div className='landingPageContainer'>
 
@@ -14,11 +16,21 @@ export default function LandingPage() {
     <h2>GEN-Z Meet</h2>
   </div>
   <div className="navlist">
-   <p>Join as Guest </p>
-   <p>Register</p>
+   <p onClick={() => {
+                        router("/aljk23")
+                    }}>Join as Guest</p>
+                    <p onClick={() => {
+                        router("/auth")
+
+                    }}>Register</p>
+                    <div onClick={() => {
+                        router("/auth")
+
+                    }} role='button'></div>
    <button>Login</button>
   </div>
     </nav>
+    
         <div className="landingMainContainer">
 <div><h1><span style={{color: "orange"}}>Connect</span> with your Loved once </h1>
 <p>Cover a distance by GEN-Z Meet</p>
