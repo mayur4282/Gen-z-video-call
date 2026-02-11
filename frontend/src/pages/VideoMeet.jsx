@@ -285,6 +285,7 @@ let localVideoRef = useRef();
         socketRef.current.on('signal', gotMessageFromServer)
 
          socketRef.current.on('connect', () => {
+            console.log("Mera socket connect ho gya , my id is:", socketRef.current.id);
 
             socketRef.current.emit('join-call', window.location.href)
            
