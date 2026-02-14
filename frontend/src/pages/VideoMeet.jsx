@@ -475,13 +475,16 @@ let localVideoRef = useRef();
     <div>
           
         {askForUsername === true ? 
-        <div>
+        <div style={{ display: 'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', backgroundColor: '#fff8e9'}}>
           <h2>Enter into Lobby </h2>
+          <div style={{ display:'flex', gap:'15px', marginTop:'20px', marginBottom:'20px' }}>
           <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
               <Button variant="contained" onClick={connect}>Connect</Button>
+              </div>
 
-              <div>
-                <video ref={localVideoRef} autoPlay muted ></video>
+              <div style={{width:'100%' ,maxWidth:'600px', borderRadius:'12px', overflow:'hidden', boxShadow:'0 10px 30px rgba(0,0,0,0.15)', backgroundColor:'black'
+              }}>
+                <video ref={localVideoRef} autoPlay muted style={{width:'100% ', display:'block'}} ></video>
 
               </div>
 
@@ -493,8 +496,8 @@ let localVideoRef = useRef();
 
                     {showModal ? <div className={styles.chatRoom}>
 
-                        <div className={styles.chatContainer}>
-                            <h1>Chat</h1>
+                        <div className={styles.chatContainer} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px' }}>
+                            <h1 style={{ textAlign:'centre', padding:'10px'}}>Chat</h1>
 
                             <div className={styles.chattingDisplay}>
 
@@ -507,12 +510,12 @@ let localVideoRef = useRef();
                                             <p>{item.data}</p>
                                         </div>
                                     )
-                                }) : <p>No Messages Yet</p>}
+                                }) :  <p style={{color:'gray'}}>No messages yet</p>}
 
 
                             </div>
 
-                            <div className={styles.chattingArea}>
+                            <div className={styles.chattingArea} style={{display:'flex', gap:'10px', padding:'13px'}}>
                                 <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
                                 <Button variant='contained' onClick={sendMessage}>Send</Button>
                             </div>

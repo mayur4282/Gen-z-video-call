@@ -86,7 +86,11 @@ export default function Authentication() {
                     display: 'flex', 
                     flexDirection: 'column', 
                     alignItems: 'center',
-                    borderRadius: 2
+                    backgroundColor: 'blur(10px)',
+                    border: '1px solid rgba( 255, 255, 255, 0.3)',
+                    borderRadius: 2,
+                    width: '100%',
+                    maxWidth:'400px'
                 }}>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />

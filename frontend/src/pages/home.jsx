@@ -23,24 +23,25 @@ function HomeComponent() {
     return (
         <>
 
-            <div className="navBar">
+            <div className="navBar" style={{backgroundColor: '#fff8e9'}} >
 
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center"  }}>
 
-                    <h2>GEN-Z Meet</h2>
+                    <h2 style={{ fontSize: '2rem', margin:0, marginTop:'5px'}}>GEN-Z Meet</h2>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <IconButton onClick={
+                <div style={{ display: "flex", alignItems: "center", gap:'15px'  }}>
+                    <IconButton  onClick={
                         () => {
                             navigate("/history")
                         }
                     }>
                         <RestoreIcon />
-                    </IconButton> 
-                    <p>History</p>
+                          <p style={{margin:0, fontSize:'1rem'}}>History</p>
+                    </IconButton > 
+                  
 
-                    <Button onClick={() => {
+                    <Button  onClick={() => {
                         localStorage.removeItem("token")
                         navigate("/auth")
                     }}>
@@ -52,14 +53,17 @@ function HomeComponent() {
             </div>
 
 
-            <div className="meetContainer">
+            <div className="meetContainer" >
                 <div className="leftPanel">
                     <div>
-                        <h2>Providing Quality Video Call Just Like Quality Education</h2>
+                        <h2 style={{ marginBottom:'30px', lineHeight: '1.5', fontWeight: 'bold', 
+                            fontSize:"30px",}}>
+                            Providing quality video call just like quality education</h2>
 
                         <div style={{ display: 'flex', gap: "10px" }}>
 
-                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Meeting Code" variant="outlined" />
+                            <TextField  onChange={e => setMeetingCode(e.target.value)} 
+                            id="outlined-basic" label="Meeting Code" variant="outlined" />
                             <Button onClick={handleJoinVideoCall} variant='contained'>Join</Button>
 
                         </div>
