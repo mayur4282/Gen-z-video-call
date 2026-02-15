@@ -321,7 +321,7 @@ let localVideoRef = useRef();
                          if(videoExists){
                           setVideo(video=>{
                             const updatedVideos = videos.map(video=>
-                              video.socketId === socketListId ? {...video, stream: event.strem} : video 
+                              video.socketId === socketListId ? {...video, stream: event.stream} : video 
                             ); 
                               videoRef.current = updatedVideos;
                                 return updatedVideos;
@@ -565,7 +565,7 @@ let localVideoRef = useRef();
 
                  data-socket={video.socketId} 
                 ref={ref => {
-                  if(ref && video.strem){
+                  if(ref && video.stream){
                     ref.srcObject = video.stream;
                   }
                 }}
