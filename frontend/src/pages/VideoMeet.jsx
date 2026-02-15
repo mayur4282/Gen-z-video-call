@@ -499,18 +499,18 @@ let localVideoRef = useRef();
                         <div className={styles.chatContainer} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px' }}>
                             <h1 style={{ textAlign:'centre', padding:'10px'}}>Chat</h1>
 
-                            <div className={styles.chattingDisplay}>
+                            <div className={styles.chattingDisplay} style={{ flexGrow: 1 , width:'100%', overflowY:'auto' ,padding:'20px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'#f9f9f9'}}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
 
                                     console.log(messages)
                                     return (
-                                        <div style={{ marginBottom: "20px" }} key={index}>
-                                            <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                                            <p>{item.data}</p>
+                                        <div style={{ marginBottom: "20px",textAlign:'left', width:'100%', padding:'8px 12px', borderRadius:'8px', backgroundColor:'white',boxShadow:'0 1px 3px rgba(0,0,0,0.1)'}} key={index}>
+                                            <p style={{ fontWeight: "bold", fontsize:'0.9rem',marginBottom:'4px' }}>{item.sender}</p>
+                                            <p style={{ margin:'0', color:'#333' }}>{item.data}</p>
                                         </div>
                                     )
-                                }) :  <p style={{color:'gray'}}>No messages yet</p>}
+                                }) :  <p style={{color:'gray', alignSelf:'center'}}>No messages yet</p>}
 
 
                             </div>
