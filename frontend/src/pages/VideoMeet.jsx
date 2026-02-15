@@ -21,7 +21,11 @@ var connections = {};
 
 const peerConfigConnections = {
     "iceServers": [
-        { "urls": "stun:stun.l.google.com:19302" }   //stunserver = public ip
+        { "urls": "stun:stun.l.google.com:19302" }, //stunserver = public ip
+         { "urls": "stun:stun1.l.google.com:19302" },
+          { "urls": "stun:stun2.l.google.com:19302" },
+           { "urls": "stun:stun3.l.google.com:19302" },
+            { "urls": "stun:stun4.l.google.com:19302" }
     ]
 }
 
@@ -551,7 +555,7 @@ let localVideoRef = useRef();
 
 
 
-            <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted></video>
+            <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted playsInline></video>
             
             <div className={styles.conferenceView}> {videos.map((video)=>(
               <div  key={video.socketId}>
@@ -565,7 +569,7 @@ let localVideoRef = useRef();
                     ref.srcObject = video.stream;
                   }
                 }}
-                autoPlay 
+                autoPlay playsInline
                 > 
 
                  
