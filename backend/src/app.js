@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import {connectToSocket} from "./controllers/socketManager.js"
 import cors from "cors";
 import userRoutes from "./routes/users.routes.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 
 
@@ -23,9 +25,8 @@ app.use("/api/v1/users", userRoutes);
 
 
 const start  = async () =>{
-const connectionDb = await mongoose.connect(
-  "mongodb+srv://sketchboxmayur4282_db_user:111222333@cluster0.bmywb5k.mongodb.net/"
-);
+const connectionDb = await mongoose.connect(process.env.MONGO_URL);
+
 console.log(`MONGO connected DB host:${connectionDb.connection.host}`)
 server.listen(app.get("port"), () => {
     console.log("listening on port 8000")
