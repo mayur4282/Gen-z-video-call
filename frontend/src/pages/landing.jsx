@@ -11,38 +11,33 @@ export default function LandingPage() {
 
   <nav>
 
-
   <div className="navHeader">
     <h2>GEN-Z Meet</h2>
   </div>
   <div className="navlist">
-   <p onClick={() => {
+   <p className="nav-link" onClick={() => {
                         router("/guest")
                     }}>Join as Guest</p>
-                    <p onClick={() => {
+                    <p className="nav-link" onClick={() => {
                         router("/auth")
 
                     }}>Register</p>
-                    <div onClick={() => {
+   <div className="nav-btn" onClick={() => {
                         router("/auth")
 
-                    }} role='button'></div>
-   <div onClick={() => {
-                        router("/auth")
-
-                    }} role='button'>Login</div>
+                    }}>Login</div>
   </div>
     </nav>
     
         <div className="landingMainContainer">
-<div><h1><span style={{color: "orange"}}>Connect</span> with your Loved once </h1>
-<p>Cover a distance by GEN-Z Meet</p>
-<div role='button'>
+<div><h1><span className="hero-highlight">Connect</span> with your Loved Ones</h1>
+<p>Bridge the distance with crystal-clear video calls. GEN-Z Meet brings you closer to the people who matter most.</p>
+<div className='hero-cta'>
    <Link to={"/auth"}>Get Started</Link> 
 </div>
 </div>
 <div>
-    <img src="/mobile.png" alt="mobile" />
+    <img src="/mobile.png" alt="GEN-Z Meet mobile app preview" />
 </div>
 
         </div>
@@ -51,4 +46,3 @@ export default function LandingPage() {
     </div>
   )
 }
-

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef , useState} from 'react'
-import io, { connect } from "socket.io-client";
+import React, { useEffect, useRef, useState} from 'react'
+import io from "socket.io-client";
 
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
@@ -78,7 +78,7 @@ let localVideoRef = useRef();
         console.log("HELLO")
         getPermissions();
 
-    })
+    }, [])
 
     let getDislayMedia = () => {
         if (screen) {
@@ -298,10 +298,21 @@ let localVideoRef = useRef();
               socketRef.current.on('chat-message', addMessage)
 
             socketRef.current.on('user-left', (id) => {
-          setVideos((videos) => videos.filter((video) => video.socketId !== id))
-        })
+              if (connections[id]) {
+                  connections[id].close();
+                  delete connections[id];
+              }
+              setVideos((videos) => videos.filter((video) => video.socketId !== id))
+            })
           socketRef.current.on('user-joined', (id, clients) => {
             clients.forEach((socketListId)=>{
+
+                if (socketListId === socketIdRef.current) return;
+
+                if (connections[socketListId]) {
+                    connections[socketListId].close();
+                    delete connections[socketListId];
+                }
 
                connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
 
@@ -319,8 +330,8 @@ let localVideoRef = useRef();
                          let videoExists = videoRef.current.find(video => video.socketId === socketListId);
                          
                          if(videoExists){
-                          setVideo(video=>{
-                            const updatedVideos = videos.map(video=>
+                          setVideos(prevVideos=>{
+                            const updatedVideos = prevVideos.map(video=>
                               video.socketId === socketListId ? {...video, stream: event.stream} : video 
                             ); 
                               videoRef.current = updatedVideos;
@@ -334,8 +345,9 @@ let localVideoRef = useRef();
                                 autoplay: true,
                                 playsinline: true
                             };
-                      setVideos(videos => {
-                                const updatedVideos = [...videos, newVideo];
+                      setVideos(prevVideos => {
+                                const filtered = prevVideos.filter(v => v.socketId !== socketListId);
+                                const updatedVideos = [...filtered, newVideo];
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
                             });
@@ -479,16 +491,44 @@ let localVideoRef = useRef();
     <div>
           
         {askForUsername === true ? 
-        <div style={{ display: 'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', backgroundColor: '#fff8e9'}}>
-          <h2>Enter into Lobby </h2>
-          <div style={{ display:'flex', gap:'15px', marginTop:'20px', marginBottom:'20px' }}>
-          <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
-              <Button variant="contained" onClick={connect}>Connect</Button>
+        <div style={{ display: 'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', background: 'linear-gradient(135deg, #0B0D17 0%, #131627 40%, #1A1E35 100%)', padding: '2rem' }}>
+          <h2 style={{ color: '#EAEDF3', fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: '1.6rem', letterSpacing: '-0.02em', marginBottom: '8px' }}>Enter the Lobby</h2>
+          <p style={{ color: '#8B8FA3', fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', marginBottom: '24px' }}>Preview your camera and join the meeting</p>
+          <div style={{ display:'flex', gap:'12px', marginBottom:'24px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" 
+            sx={{
+              minWidth: '0px',
+              flex: '1 1 180px',
+              maxWidth: '280px',
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'rgba(255,255,255,0.03)',
+                borderRadius: '10px',
+                color: '#EAEDF3',
+                '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
+                '&:hover fieldset': { borderColor: 'rgba(108,99,255,0.4)' },
+                '&.Mui-focused fieldset': { borderColor: '#6C63FF', boxShadow: '0 0 0 3px rgba(108,99,255,0.15)' },
+              },
+              '& .MuiInputLabel-root': { color: '#8B8FA3' },
+              '& .MuiInputLabel-root.Mui-focused': { color: '#A78BFA' },
+            }}
+          />
+              <Button variant="contained" onClick={connect}
+                sx={{
+                  background: 'linear-gradient(135deg, #6C63FF 0%, #A78BFA 100%)',
+                  borderRadius: '50px',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  padding: '10px 28px',
+                  boxShadow: '0 4px 16px rgba(108,99,255,0.3)',
+                  fontFamily: "'Inter', sans-serif",
+                  '&:hover': { background: 'linear-gradient(135deg, #5A52E0 0%, #9171F0 100%)', transform: 'translateY(-2px)', boxShadow: '0 6px 24px rgba(108,99,255,0.45)' },
+                }}
+              >Connect</Button>
               </div>
 
-              <div style={{width:'100%' ,maxWidth:'600px', borderRadius:'12px', overflow:'hidden', boxShadow:'0 10px 30px rgba(0,0,0,0.15)', backgroundColor:'black'
+              <div style={{width:'100%', maxWidth:'600px', borderRadius:'16px', overflow:'hidden', boxShadow:'0 12px 40px rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', backgroundColor:'#0B0D17'
               }}>
-                <video ref={localVideoRef} autoPlay muted style={{width:'100% ', display:'block'}} ></video>
+                <video ref={localVideoRef} autoPlay muted style={{width:'100%', display:'block'}} ></video>
 
               </div>
 
@@ -500,28 +540,56 @@ let localVideoRef = useRef();
 
                     {showModal ? <div className={styles.chatRoom}>
 
-                        <div className={styles.chatContainer} style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'10px' }}>
-                            <h1 style={{ textAlign:'centre', padding:'10px'}}>Chat</h1>
+                        <div className={styles.chatContainer} style={{ display:'flex', flexDirection:'column', padding:'0' }}>
+                            <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                              <h3 style={{ margin: 0, color: '#EAEDF3', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: '1rem' }}>Chat</h3>
+                            </div>
 
-                            <div className={styles.chattingDisplay} style={{ flexGrow: 1 , width:'100%', overflowY:'auto' ,padding:'20px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'#f9f9f9'}}>
+                            <div className={styles.chattingDisplay} style={{ flexGrow: 1, width:'100%', overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'transparent', gap: '8px' }}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
 
                                     console.log(messages)
                                     return (
-                                        <div style={{ marginBottom: "20px",textAlign:'left', width:'100%', padding:'8px 12px', borderRadius:'8px', backgroundColor:'white',boxShadow:'0 1px 3px rgba(0,0,0,0.1)'}} key={index}>
-                                            <p style={{ fontWeight: "bold", fontsize:'0.9rem',marginBottom:'4px' }}>{item.sender}</p>
-                                            <p style={{ margin:'0', color:'#333' }}>{item.data}</p>
+                                        <div style={{ textAlign:'left', width:'100%', padding:'10px 14px', borderRadius:'10px', backgroundColor:'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)'}} key={index}>
+                                            <p style={{ fontWeight: 600, fontSize:'0.8rem', marginBottom:'4px', color: '#A78BFA', fontFamily: "'Inter', sans-serif" }}>{item.sender}</p>
+                                            <p style={{ margin:'0', color:'#EAEDF3', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif" }}>{item.data}</p>
                                         </div>
                                     )
-                                }) :  <p style={{color:'gray', alignSelf:'center'}}>No messages yet</p>}
+                                }) :  <p style={{color:'#8B8FA3', alignSelf:'center', fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', marginTop: '40px'}}>No messages yet</p>}
 
 
                             </div>
 
-                            <div className={styles.chattingArea} style={{display:'flex', gap:'10px', padding:'13px'}}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
-                                <Button variant='contained' onClick={sendMessage}>Send</Button>
+                            <div className={styles.chattingArea} style={{display:'flex', gap:'8px', padding:'12px'}}>
+                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Type a message..." variant="outlined" size="small"
+                                  sx={{
+                                    flex: 1,
+                                    '& .MuiOutlinedInput-root': {
+                                      backgroundColor: 'rgba(255,255,255,0.03)',
+                                      borderRadius: '10px',
+                                      color: '#EAEDF3',
+                                      fontSize: '0.9rem',
+                                      '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
+                                      '&:hover fieldset': { borderColor: 'rgba(108,99,255,0.4)' },
+                                      '&.Mui-focused fieldset': { borderColor: '#6C63FF' },
+                                    },
+                                    '& .MuiInputLabel-root': { color: '#8B8FA3', fontSize: '0.85rem' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: '#A78BFA' },
+                                  }}
+                                />
+                                <Button variant='contained' onClick={sendMessage}
+                                  sx={{
+                                    background: 'linear-gradient(135deg, #6C63FF 0%, #A78BFA 100%)',
+                                    borderRadius: '10px',
+                                    textTransform: 'none',
+                                    fontWeight: 600,
+                                    minWidth: '60px',
+                                    fontSize: '0.85rem',
+                                    boxShadow: '0 2px 8px rgba(108,99,255,0.3)',
+                                    '&:hover': { background: 'linear-gradient(135deg, #5A52E0 0%, #9171F0 100%)' },
+                                  }}
+                                >Send</Button>
                             </div>
 
 
@@ -558,8 +626,7 @@ let localVideoRef = useRef();
             <video className={styles.meetUserVideo} ref={localVideoRef} autoPlay muted playsInline></video>
             
             <div className={styles.conferenceView}> {videos.map((video)=>(
-              <div  key={video.socketId}>
-                <h2>{video.socketId}</h2>
+              <div  key={video.socketId} style={{ position: 'relative', display: 'inline-block', overflow: 'hidden', borderRadius: '14px' }}>
 
                 <video 
 
@@ -574,6 +641,20 @@ let localVideoRef = useRef();
 
                  
                 </video>
+                <span style={{
+                    position: 'absolute',
+                    bottom: '8px',
+                    left: '8px',
+                    color: '#EAEDF3',
+                    backgroundColor: 'rgba(0,0,0,0.55)',
+                    padding: '2px 10px',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    backdropFilter: 'blur(4px)',
+                    pointerEvents: 'none'
+                }}>{video.socketId}</span>
                
              </div>
 
