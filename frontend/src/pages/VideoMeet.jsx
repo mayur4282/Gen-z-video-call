@@ -15,6 +15,7 @@ import ChatIcon from '@mui/icons-material/Chat'
 import CloseIcon from '@mui/icons-material/Close'
 import PushPinIcon from '@mui/icons-material/PushPin'
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import { useNavigate } from 'react-router-dom';
 import server from '../environment';
 
 
@@ -33,6 +34,7 @@ const peerConfigConnections = {
 }
 
 export default function VideoMeetComponent() {
+    let navigate = useNavigate();
    
  var socketRef = useRef();
  let socketIdRef = useRef();
@@ -428,7 +430,7 @@ let localVideoRef = useRef();
             let tracks = localVideoRef.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        window.location.href = "/home"
+        navigate("/home");
     }
   
      let openChat = () => {
