@@ -12,6 +12,7 @@ import MicOffIcon from '@mui/icons-material/MicOff'
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
+import CloseIcon from '@mui/icons-material/Close'
 import server from '../environment';
 
 
@@ -65,15 +66,14 @@ let localVideoRef = useRef();
 
     let [videos, setVideos] = useState([])
 
+    const chatScrollRef = useRef(null);
 
+    useEffect(() => {
+        if (chatScrollRef.current) {
+            chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+        }
+    }, [messages, showModal]);
 
-
-    // TODO
-  //  if(isChrome() === false) {
-
-
-  //   }
-  
     useEffect(() => {
         console.log("HELLO")
         getPermissions();
@@ -536,24 +536,26 @@ let localVideoRef = useRef();
 
            </div> :
            
-                      <div className={styles.meetVideoContainer}>
+                      <div className={`${styles.meetVideoContainer} ${showModal ? styles.chatOpen : ''}`}>
 
                     {showModal ? <div className={styles.chatRoom}>
 
                         <div className={styles.chatContainer} style={{ display:'flex', flexDirection:'column', padding:'0' }}>
-                            <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                            <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <h3 style={{ margin: 0, color: '#EAEDF3', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: '1rem' }}>Chat</h3>
+                              <IconButton onClick={closeChat} size="small" sx={{ color: '#8B8FA3', '&:hover': { color: '#EAEDF3', backgroundColor: 'rgba(255,255,255,0.08)' } }}>
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
                             </div>
 
-                            <div className={styles.chattingDisplay} style={{ flexGrow: 1, width:'100%', overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'transparent', gap: '8px' }}>
+                            <div ref={chatScrollRef} className={styles.chattingDisplay} style={{ flexGrow: 1, width:'100%', overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'transparent', gap: '8px' }}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
 
-                                    console.log(messages)
                                     return (
                                         <div style={{ textAlign:'left', width:'100%', padding:'10px 14px', borderRadius:'10px', backgroundColor:'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)'}} key={index}>
                                             <p style={{ fontWeight: 600, fontSize:'0.8rem', marginBottom:'4px', color: '#A78BFA', fontFamily: "'Inter', sans-serif" }}>{item.sender}</p>
-                                            <p style={{ margin:'0', color:'#EAEDF3', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif" }}>{item.data}</p>
+                                            <p style={{ margin:'0', color:'#EAEDF3', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif", wordBreak: 'break-word' }}>{item.data}</p>
                                         </div>
                                     )
                                 }) :  <p style={{color:'#8B8FA3', alignSelf:'center', fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', marginTop: '40px'}}>No messages yet</p>}
@@ -562,7 +564,19 @@ let localVideoRef = useRef();
                             </div>
 
                             <div className={styles.chattingArea} style={{display:'flex', gap:'8px', padding:'12px'}}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Type a message..." variant="outlined" size="small"
+                                <TextField 
+                                  value={message} 
+                                  onChange={(e) => setMessage(e.target.value)} 
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                      e.preventDefault();
+                                      sendMessage();
+                                    }
+                                  }}
+                                  id="outlined-basic" 
+                                  label="Type a message..." 
+                                  variant="outlined" 
+                                  size="small"
                                   sx={{
                                     flex: 1,
                                     '& .MuiOutlinedInput-root': {
