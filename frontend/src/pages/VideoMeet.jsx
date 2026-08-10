@@ -420,10 +420,10 @@ let localVideoRef = useRef();
 
         let handleEndCall = () => {
         try {
-            let tracks = localVideoref.current.srcObject.getTracks()
+            let tracks = localVideoRef.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        window.location.href = "/"
+        window.location.href = "/home"
     }
   
      let openChat = () => {
