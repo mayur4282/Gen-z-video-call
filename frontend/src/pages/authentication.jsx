@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
-import { Snackbar, Container } from '@mui/material';
+import { Snackbar, Container, CircularProgress } from '@mui/material';
 
 
 const darkTheme = createTheme({
@@ -88,6 +88,10 @@ const darkTheme = createTheme({
                         transform: 'translateY(-2px)',
                         boxShadow: '0 6px 24px rgba(108, 99, 255, 0.45)',
                     },
+                    '&.Mui-disabled': {
+                        background: 'linear-gradient(135deg, rgba(108, 99, 255, 0.5) 0%, rgba(167, 139, 250, 0.5) 100%)',
+                        color: '#ffffff',
+                    },
                 },
                 text: {
                     textTransform: 'none',
@@ -116,17 +120,16 @@ export default function Authentication() {
 
      const [formState, setFormState] = useState(0);
    
-     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-        const { handleRegister, handleLogin } = React.useContext(AuthContext);
+    const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
-      let handleAuth = async () => {
+    let handleAuth = async () => {
         try {
+            setError("");
+            setLoading(true);
             if (formState === 0) {
-
-                let result = await handleLogin(username, password)
-
-
+                let result = await handleLogin(username, password);
             }
             if (formState === 1) {
                 let result = await handleRegister(name, username, password);
@@ -134,16 +137,15 @@ export default function Authentication() {
                 setUsername("");
                 setMessage(result);
                 setOpen(true);
-                setError("")
-                setFormState(0)
-                setPassword("")
+                setError("");
+                setFormState(0);
+                setPassword("");
             }
         } catch (err) {
-
-            //  console.log(err);
-            
-            let message = (err.response.data.message);
+            let message = err?.response?.data?.message || err?.message || "An error occurred";
             setError(message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -343,10 +345,15 @@ export default function Authentication() {
                                 type="button"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 1 }}
+                                disabled={loading}
+                                sx={{ mt: 3, mb: 1, minHeight: '48px' }}
                                 onClick={handleAuth}
                             >
-                                {formState === 0 ? "Sign In" : "Create Account"}
+                                {loading ? (
+                                    <CircularProgress size={24} sx={{ color: '#ffffff' }} />
+                                ) : (
+                                    formState === 0 ? "Sign In" : "Create Account"
+                                )}
                             </Button>
 
                             <Typography 
