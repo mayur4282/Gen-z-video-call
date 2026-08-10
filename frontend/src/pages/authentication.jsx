@@ -119,8 +119,8 @@ export default function Authentication() {
     const [ message, setMessage]  = useState("");
 
      const [formState, setFormState] = useState(0);
-   
-    const [loading, setLoading] = useState(false);
+     const [open, setOpen] = useState(false);
+     const [loading, setLoading] = useState(false);
 
     const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
