@@ -13,6 +13,8 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
 import CloseIcon from '@mui/icons-material/Close'
+import PushPinIcon from '@mui/icons-material/PushPin'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
 import server from '../environment';
 
 
@@ -44,7 +46,9 @@ let localVideoRef = useRef();
 
      let [video, setVideo] = useState([]);
 
-      let [audio, setAudio] = useState();
+      let [audio, setAudio] = useState(false);
+
+      let [pinnedMessage, setPinnedMessage] = useState(null);
 
       let [screen, setScreen] = useState();
 
@@ -143,11 +147,10 @@ let localVideoRef = useRef();
 
     }, [video, audio])
   
-        let getMedia = () => {
+    let getMedia = () => {
         setVideo(videoAvailable);
-        setAudio(audioAvailable);
-         connectToSocketServer();
-
+        setAudio(false);
+        connectToSocketServer();
     }
  
 
@@ -293,9 +296,11 @@ let localVideoRef = useRef();
 
             socketRef.current.emit('join-call', window.location.href)
            
-            socketIdRef.current = socketRef.current.id
-
-              socketRef.current.on('chat-message', addMessage)
+            socketIdRef.current = socketRef.current.id;
+            socketRef.current.on('chat-message', addMessage);
+            socketRef.current.on('pinned-message-updated', (pinnedMsg) => {
+                setPinnedMessage(pinnedMsg);
+            });
 
             socketRef.current.on('user-left', (id) => {
               if (connections[id]) {
@@ -456,9 +461,15 @@ let localVideoRef = useRef();
         console.log(socketRef.current);
         socketRef.current.emit('chat-message', message, username)
         setMessage("");
-
-        // this.setState({ message: "", sender: username })
     }
+
+    let handlePinMessage = (item) => {
+        const isAlreadyPinned = pinnedMessage && pinnedMessage.data === item?.data && pinnedMessage.sender === item?.sender;
+        const newPinned = isAlreadyPinned ? null : item;
+        if (socketRef.current) {
+            socketRef.current.emit('pin-message', newPinned);
+        }
+    };
 
    let connect = () => {
         setAskForUsername(false);
@@ -548,14 +559,57 @@ let localVideoRef = useRef();
                               </IconButton>
                             </div>
 
+                            {pinnedMessage && (
+                              <div style={{
+                                margin: '10px 14px 0 14px',
+                                padding: '10px 12px',
+                                borderRadius: '10px',
+                                backgroundColor: 'rgba(108, 99, 255, 0.15)',
+                                border: '1px solid rgba(108, 99, 255, 0.35)',
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                gap: '8px',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                              }}>
+                                <PushPinIcon sx={{ color: '#A78BFA', fontSize: 18, marginTop: '2px' }} />
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#A78BFA', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                    Pinned Message • {pinnedMessage.sender}
+                                  </span>
+                                  <p style={{ margin: '2px 0 0 0', color: '#EAEDF3', fontSize: '0.85rem', wordBreak: 'break-word', fontWeight: 500 }}>
+                                    {pinnedMessage.data}
+                                  </p>
+                                </div>
+                                <IconButton size="small" onClick={() => handlePinMessage(pinnedMessage)} title="Unpin message" sx={{ color: '#8B8FA3', padding: '2px', '&:hover': { color: '#EAEDF3' } }}>
+                                  <CloseIcon fontSize="small" style={{ fontSize: 16 }} />
+                                </IconButton>
+                              </div>
+                            )}
+
                             <div ref={chatScrollRef} className={styles.chattingDisplay} style={{ flexGrow: 1, width:'100%', overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', alignItems:'flex-start', backgroundColor:'transparent', gap: '8px' }}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
-
+                                    const isPinned = pinnedMessage && pinnedMessage.data === item.data && pinnedMessage.sender === item.sender;
                                     return (
-                                        <div style={{ textAlign:'left', width:'100%', padding:'10px 14px', borderRadius:'10px', backgroundColor:'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)'}} key={index}>
-                                            <p style={{ fontWeight: 600, fontSize:'0.8rem', marginBottom:'4px', color: '#A78BFA', fontFamily: "'Inter', sans-serif" }}>{item.sender}</p>
-                                            <p style={{ margin:'0', color:'#EAEDF3', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif", wordBreak: 'break-word' }}>{item.data}</p>
+                                        <div style={{ textAlign:'left', width:'100%', padding:'10px 14px', borderRadius:'10px', backgroundColor: isPinned ? 'rgba(108, 99, 255, 0.12)' : 'rgba(255,255,255,0.04)', border: isPinned ? '1px solid rgba(108, 99, 255, 0.35)' : '1px solid rgba(255,255,255,0.06)'}} key={index}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                                <div style={{ flex: 1, minWidth: 0, paddingRight: '8px' }}>
+                                                    <p style={{ fontWeight: 600, fontSize:'0.8rem', marginBottom:'4px', color: '#A78BFA', fontFamily: "'Inter', sans-serif" }}>{item.sender}</p>
+                                                    <p style={{ margin:'0', color:'#EAEDF3', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif", wordBreak: 'break-word' }}>{item.data}</p>
+                                                </div>
+                                                <IconButton 
+                                                    size="small" 
+                                                    onClick={() => handlePinMessage(item)} 
+                                                    title={isPinned ? "Unpin message" : "Pin message"}
+                                                    sx={{ color: isPinned ? '#A78BFA' : 'rgba(255,255,255,0.25)', padding: '2px', '&:hover': { color: '#A78BFA', backgroundColor: 'rgba(255,255,255,0.06)' } }}
+                                                >
+                                                    {isPinned ? (
+                                                        <PushPinIcon style={{ fontSize: 16 }} />
+                                                    ) : (
+                                                        <PushPinOutlinedIcon style={{ fontSize: 16 }} />
+                                                    )}
+                                                </IconButton>
+                                            </div>
                                         </div>
                                     )
                                 }) :  <p style={{color:'#8B8FA3', alignSelf:'center', fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', marginTop: '40px'}}>No messages yet</p>}

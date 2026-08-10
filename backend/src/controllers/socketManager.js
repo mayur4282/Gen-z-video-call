@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 let connections = {}
 let messages = {}
 let timeOnline = {}
+let pinnedMessages = {}
 
 
 export const connectToSocket = (server) => {
@@ -40,7 +41,9 @@ export const connectToSocket = (server) => {
             messages[path][a]['socket-id-sender'] );
     }
 }
-
+        if (pinnedMessages[path] !== undefined && pinnedMessages[path] !== null) {
+            io.to(socket.id).emit("pinned-message-updated", pinnedMessages[path]);
+        }
 
         })
         socket.on("signal", (toId , message) => {
@@ -75,7 +78,25 @@ export const connectToSocket = (server) => {
                  }
                
                
-        }) 
+        })
+
+        socket.on("pin-message", (pinnedMsg) => {
+            const [matchingRoom, found] = Object.entries(connections)
+            .reduce(( [room , isFound], [roomKey, roomValue]) => {
+                if (!isFound && roomValue.includes(socket.id)) {
+                    return [roomKey , true];
+                } 
+                return [room, isFound];
+            }, ['', false]);
+
+            if (found === true) {
+                pinnedMessages[matchingRoom] = pinnedMsg;
+                connections[matchingRoom].forEach((elem) => {
+                    io.to(elem).emit("pinned-message-updated", pinnedMsg);
+                });
+            }
+        });
+
             socket.on("disconnect", ()=> {   
                   var diffTime = Math.abs(timeOnline[socket.id] - new Date())
 
@@ -96,6 +117,7 @@ export const connectToSocket = (server) => {
 
     if (connections[key].length == 0) {
         delete connections[key]
+        delete pinnedMessages[key]
     }
 }
         }
