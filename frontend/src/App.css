@@ -180,15 +180,40 @@
   z-index: 100;
 }
 
+.navLeft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.navCenter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navRight {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 /* ===================================
    HOME PAGE — MEET CONTAINER
    =================================== */
 
 .meetContainer {
   display: flex;
-  padding: 2rem 3rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
   min-height: calc(100vh - 64px);
-  gap: 4rem;
+  gap: 3.5rem;
   justify-content: center;
   align-items: center;
   background: var(--bg-primary);
@@ -203,15 +228,22 @@
 .rightPanel {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  max-width: 300px;
 }
 
-.rightPanel > img {
-  width: 28vw;
-  max-width: 420px;
+.rightPanel > img,
+.rightPanel img,
+.illustrationWrapper img {
+  width: 100%;
+  max-width: 260px;
   height: auto;
+  max-height: 260px;
+  object-fit: contain;
   border-radius: 20px;
   border: 1px solid var(--border);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 32px rgba(108, 99, 255, 0.15);
 }
 
 /* ===================================
@@ -261,9 +293,12 @@
     justify-content: center;
   }
 
-  .rightPanel > img {
-    width: 80vw;
-    max-width: 350px;
+  .rightPanel > img,
+  .rightPanel img,
+  .illustrationWrapper img {
+    width: 100%;
+    max-width: 240px;
+    max-height: 240px;
   }
 
   .navBar {
@@ -348,8 +383,214 @@
     justify-content: center;
   }
 
-  .rightPanel > img {
-    width: 85vw;
-    max-width: 300px;
+  .rightPanel > img,
+  .rightPanel img,
+  .illustrationWrapper img {
+    width: 100%;
+    max-width: 220px;
+    max-height: 220px;
   }
 }
+
+/* ===================================
+   HOME PAGE & FEATURES SECTION STYLES
+   =================================== */
+
+.homeHeroSection {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.25);
+  color: #A78BFA;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.stepsGuideContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.stepCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #D1D5DB;
+  font-weight: 500;
+}
+
+.stepNum {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #6C63FF, #A78BFA);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.stepArrow {
+  color: #6B7280;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.callInputBox {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 680px;
+}
+
+.illustrationWrapper {
+  position: relative;
+}
+
+.illustrationWrapper::after {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.25) 0%, transparent 70%);
+  z-index: -1;
+  border-radius: 30px;
+  filter: blur(25px);
+}
+
+/* ===== FEATURES SECTION ===== */
+.featuresSection {
+  padding: 5rem 2.5rem 6rem;
+  background: #080A12;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.featuresContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.featureBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  color: #A78BFA;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sectionHeader h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #EAEDF3;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.sectionHeader p {
+  color: #8B8FA3;
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.featureCard {
+  background: rgba(19, 22, 39, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.featureCard:hover {
+  transform: translateY(-6px);
+  border-color: rgba(108, 99, 255, 0.35);
+  box-shadow: 0 12px 30px rgba(108, 99, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.featureIconBox {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(108, 99, 255, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.featureCard h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #EAEDF3;
+  margin-bottom: 10px;
+}
+
+.featureCard p {
+  color: #8B8FA3;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .stepsGuideContainer {
+    justify-content: center;
+  }
+  .callInputBox {
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .featuresSection {
+    padding: 3.5rem 1.5rem 4rem;
+  }
+  .sectionHeader h2 {
+    font-size: 1.8rem;
+  }
+}
+
