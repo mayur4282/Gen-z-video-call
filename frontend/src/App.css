@@ -579,18 +579,188 @@
 }
 
 @media (max-width: 900px) {
+  .meetContainer {
+    flex-direction: column;
+    padding: 2rem 1.25rem;
+    gap: 2rem;
+    text-align: center;
+    min-height: auto;
+  }
+
+  .leftPanel {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .heroTitle {
+    font-size: 1.85rem;
+  }
+
+  .heroSubtitle {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.98rem;
+  }
+
   .stepsGuideContainer {
     justify-content: center;
   }
+
   .callInputBox {
     justify-content: center;
     margin: 0 auto;
+    width: 100%;
   }
+
+  .rightPanel > img,
+  .rightPanel img,
+  .illustrationWrapper img {
+    width: 100%;
+    max-width: 240px;
+    max-height: 240px;
+  }
+
+  .navBar {
+    padding: 0.8rem 1.2rem;
+  }
+
   .featuresSection {
     padding: 3.5rem 1.5rem 4rem;
   }
+
   .sectionHeader h2 {
     font-size: 1.8rem;
+  }
+}
+
+/* ===== Mobile (max-width: 600px) ===== */
+@media (max-width: 600px) {
+  .navBar {
+    padding: 0.6rem 0.8rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .navLeft {
+    flex: 1 1 auto;
+  }
+
+  .navLeft h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .navCenter {
+    order: 3;
+    flex: 1 1 100%;
+    margin-top: 4px;
+    justify-content: center;
+  }
+
+  .navCenter button {
+    width: 100%;
+    padding: 6px 14px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .navRight {
+    flex: 1 1 auto;
+    gap: 6px;
+  }
+
+  .navRight button {
+    padding: 5px 10px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .homeHeroSection {
+    padding: 1rem 0;
+  }
+
+  .meetContainer {
+    padding: 1.25rem 0.75rem;
+    gap: 1.25rem;
+  }
+
+  .heroTitle {
+    font-size: 1.45rem;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  /* Vertical Step Guide on Mobile */
+  .stepsGuideContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .stepCard {
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    width: 100%;
+  }
+
+  .stepArrow {
+    display: none;
+  }
+
+  /* Full Width Stacked Inputs & Buttons on Mobile */
+  .callInputBox {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .callInputBox > * {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .callInputBox button {
+    justify-content: center;
+    padding: 12px 16px !important;
+    font-size: 0.92rem !important;
+  }
+
+  /* Features Grid on Mobile */
+  .featuresSection {
+    padding: 3rem 1rem 4rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.45rem;
+  }
+
+  .sectionHeader p {
+    font-size: 0.88rem;
+  }
+
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .featureCard {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .featureCard h3 {
+    font-size: 1.1rem;
+  }
+
+  .featureCard p {
+    font-size: 0.88rem;
   }
 }
 

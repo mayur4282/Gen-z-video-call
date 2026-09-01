@@ -259,14 +259,7 @@ function HomeComponent() {
                                     <span>Fast & Secure Video Connection</span>
                                 </div>
 
-                                <h1 style={{
-                                    marginBottom: '16px',
-                                    lineHeight: '1.25',
-                                    fontWeight: 800,
-                                    fontSize: "2.3rem",
-                                    letterSpacing: '-0.02em',
-                                    color: '#EAEDF3',
-                                }}>
+                                <h1 className="heroTitle">
                                     Connect with Friends &amp; Loved Ones
                                     <br />
                                     <span style={{
@@ -276,13 +269,7 @@ function HomeComponent() {
                                     }}>on GEN-Z Meet</span>
                                 </h1>
 
-                                <p style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '1.05rem',
-                                    lineHeight: 1.6,
-                                    marginBottom: '24px',
-                                    maxWidth: '520px',
-                                }}>
+                                <p className="heroSubtitle">
                                     Create or enter a meeting code, share it with your friend, and connect instantly on a high-quality video call!
                                 </p>
 

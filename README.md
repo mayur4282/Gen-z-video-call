@@ -1,6 +1,8 @@
-#  ApnaVideo - Real-Time Video Calling & WebRTC Platform
+#   Gen-Z Video Call - Real-Time Video Calling & WebRTC Platform
+#  Gen-Z Real-Time Video Calling & WebRTC Platform
 
-> **ApnaVideo** (also known as Gen-Z Video Call) is a modern, high-performance full-stack web application for real-time video conferencing, peer-to-peer video calls, screen sharing, and instant in-meeting messaging. Built using **React 19**, **Node.js**, **Express**, **Socket.IO**, **WebRTC**, and **MongoDB**.
+> ** Gen-Z Video Call is a modern, high-performance full-stack web application for real-time video conferencing, peer-to-peer video calls, screen sharing, and instant in-meeting messaging. Built using **React 19**, **Node.js**, **Express**, **Socket.IO**, **WebRTC**, and **MongoDB**.
+> **  Gen-Z Video Call is a modern, high-performance full-stack web application for real-time video conferencing, peer-to-peer video calls, screen sharing, and instant in-meeting messaging. Built using **React 19**, **Node.js**, **Express**, **Socket.IO**, **WebRTC**, and **MongoDB**.
 
 ---
 
